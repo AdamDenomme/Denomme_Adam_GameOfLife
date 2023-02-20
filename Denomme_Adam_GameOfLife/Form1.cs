@@ -262,7 +262,8 @@ namespace Denomme_Adam_GameOfLife
 
                 // Update status strip generations
                 toolStripStatusLabelGenerations.Text = "Generations = " + generations.ToString();
-           
+                toolStripStatusAlive.Text = "Alive: " + isAlive.ToString();
+
         }
 
         // The event called by the timer every Interval milliseconds.
@@ -600,6 +601,11 @@ namespace Denomme_Adam_GameOfLife
         private void fromTimeToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             RandomizeTime();
+        }
+
+        private void toolStripStatusInterval_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

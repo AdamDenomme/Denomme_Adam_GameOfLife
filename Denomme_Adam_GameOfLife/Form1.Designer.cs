@@ -72,6 +72,10 @@
             this.helpToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelGenerations = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusInterval = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusAlive = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusSeed = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.graphicsPanel1 = new Denomme_Adam_GameOfLife.GraphicsPanel();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -293,20 +297,20 @@
             // fromSeedToolStripMenuItem
             // 
             this.fromSeedToolStripMenuItem.Name = "fromSeedToolStripMenuItem";
-            this.fromSeedToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.fromSeedToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.fromSeedToolStripMenuItem.Text = "From Seed";
             this.fromSeedToolStripMenuItem.Click += new System.EventHandler(this.fromSeedToolStripMenuItem_Click);
             // 
             // fromTimeToolStripMenuItem
             // 
             this.fromTimeToolStripMenuItem.Name = "fromTimeToolStripMenuItem";
-            this.fromTimeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.fromTimeToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.fromTimeToolStripMenuItem.Text = "From Current Seed";
             // 
             // fromTimeToolStripMenuItem1
             // 
             this.fromTimeToolStripMenuItem1.Name = "fromTimeToolStripMenuItem1";
-            this.fromTimeToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.fromTimeToolStripMenuItem1.Size = new System.Drawing.Size(173, 22);
             this.fromTimeToolStripMenuItem1.Text = "From Time";
             this.fromTimeToolStripMenuItem1.Click += new System.EventHandler(this.fromTimeToolStripMenuItem1_Click);
             // 
@@ -423,7 +427,11 @@
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabelGenerations});
+            this.toolStripStatusLabelGenerations,
+            this.toolStripStatusInterval,
+            this.toolStripStatusAlive,
+            this.toolStripStatusSeed,
+            this.toolStripStatusLabel4});
             this.statusStrip1.Location = new System.Drawing.Point(0, 323);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(573, 22);
@@ -435,6 +443,30 @@
             this.toolStripStatusLabelGenerations.Name = "toolStripStatusLabelGenerations";
             this.toolStripStatusLabelGenerations.Size = new System.Drawing.Size(90, 17);
             this.toolStripStatusLabelGenerations.Text = "Generations = 0";
+            // 
+            // toolStripStatusInterval
+            // 
+            this.toolStripStatusInterval.Name = "toolStripStatusInterval";
+            this.toolStripStatusInterval.Size = new System.Drawing.Size(52, 17);
+            this.toolStripStatusInterval.Text = "Interval: ";
+            this.toolStripStatusInterval.Click += new System.EventHandler(this.toolStripStatusInterval_Click);
+            // 
+            // toolStripStatusAlive
+            // 
+            this.toolStripStatusAlive.Name = "toolStripStatusAlive";
+            this.toolStripStatusAlive.Size = new System.Drawing.Size(39, 17);
+            this.toolStripStatusAlive.Text = "Alive: ";
+            // 
+            // toolStripStatusSeed
+            // 
+            this.toolStripStatusSeed.Name = "toolStripStatusSeed";
+            this.toolStripStatusSeed.Size = new System.Drawing.Size(38, 17);
+            this.toolStripStatusSeed.Text = "Seed: ";
+            // 
+            // toolStripStatusLabel4
+            // 
+            this.toolStripStatusLabel4.Name = "toolStripStatusLabel4";
+            this.toolStripStatusLabel4.Size = new System.Drawing.Size(0, 17);
             // 
             // graphicsPanel1
             // 
@@ -516,6 +548,10 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem finiteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem torodialToolStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusInterval;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusAlive;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusSeed;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
     }
 }
 
