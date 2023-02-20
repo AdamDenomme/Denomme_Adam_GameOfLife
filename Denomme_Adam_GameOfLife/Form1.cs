@@ -25,10 +25,6 @@ namespace Denomme_Adam_GameOfLife
         // The scratchpad array
         bool[,] scratchPad = new bool[30, 30];
 
-        // Bool to see if cell is alive
-        bool isAlive;
-
-
         // Drawing colors
         Color gridColor = Color.Black;
         Color cellColor = Color.Gray;
@@ -38,6 +34,9 @@ namespace Denomme_Adam_GameOfLife
 
         // Generation count
         int generations = 0;
+
+        // Alive Cell count
+        int AliveCells = 0;
 
         public Form1()
         {
@@ -67,6 +66,7 @@ namespace Denomme_Adam_GameOfLife
                     if (randNum == 0)
                     {
                         universe[x, y] = true;
+                        AliveCells++;
                     }
                     else
                     {
@@ -74,6 +74,8 @@ namespace Denomme_Adam_GameOfLife
                     }
                     
                 }
+            
+            toolStripStatusAlive.Text = "Alive: " + AliveCells.ToString();
             graphicsPanel1.Invalidate();
         }
 
@@ -94,6 +96,9 @@ namespace Denomme_Adam_GameOfLife
                     if (randNum == 0)
                     {
                         universe[x, y] = true;
+
+                        // Update alive cell count
+                        AliveCells++;
                     }
                     else
                     {
@@ -101,6 +106,8 @@ namespace Denomme_Adam_GameOfLife
                     }
 
                 }
+            
+            toolStripStatusAlive.Text = "Alive: " + AliveCells.ToString();
             graphicsPanel1.Invalidate();
         }
 
@@ -203,54 +210,58 @@ namespace Denomme_Adam_GameOfLife
 
                 for (int x = 0; x < universe.GetLength(0); x++)
                     {
-
-                        if (CountNeighborisFinite == true)
-                        {
-                            CountNeighbor = CountNeighborsFinite(x, y);
-                        }
-                        else if (CountNeighborisFinite == false)
-                        {
-                            CountNeighbor = CountNeighborsToroidal(x, y);
-                        }
-                    
-                        int count = CountNeighbor;
-
-                        // Living cells with less than 2 living neighbors die in the next generation.
-                        if (universe[x, y] == true && count < 2)
-                        {
-                            scratchPad[x, y] = false;
-                            isAlive = false;
-                        }
-
-                        // Living cells with more than 3 living neighbors die in the next generation.
-                        if (universe[x, y] == true && count > 3)
-                        {
-                            scratchPad[x, y] = false;
-                            isAlive = false;
-                        }
-
-                        // Living cells with 2 or 3 living neighbors live in the next generation.
-                        if (universe[x, y] == true && (count == 3 || count == 2))
-                        {
-                            scratchPad[x, y] = true;
-                            isAlive = true;
-                        }
-
-                        // Dead cells with exactly 3 living neighbors live in the next generation.
-                        if (universe[x, y] == false && count == 3)
-                        {
-                            scratchPad[x, y] = true;
-                            isAlive = true;
-                        }
-
-                        // Dead cells without 3 living neighbors are still dead in the next generation.
-                        if (universe[x, y] == false && count != 3)
-                        {
-                            scratchPad[x, y] = false;
-                            isAlive = false;
-                        }
-
+                    if (CountNeighborisFinite == true)
+                    {
+                        CountNeighbor = CountNeighborsFinite(x, y);
                     }
+                    else if (CountNeighborisFinite == false)
+                    {
+                        CountNeighbor = CountNeighborsToroidal(x, y);
+                    }
+                    
+                    int count = CountNeighbor;
+
+                    // Living cells with less than 2 living neighbors die in the next generation.
+                    if (universe[x, y] == true && count < 2)
+                    {
+                        scratchPad[x, y] = false;
+                    }
+
+                    // Living cells with more than 3 living neighbors die in the next generation.
+                    if (universe[x, y] == true && count > 3)
+                    {
+                        scratchPad[x, y] = false;
+                    }
+
+                    // Living cells with 2 or 3 living neighbors live in the next generation.
+                    if (universe[x, y] == true && (count == 3 || count == 2))
+                    {
+                        scratchPad[x, y] = true;
+                    }
+
+                    // Dead cells with exactly 3 living neighbors live in the next generation.
+                    if (universe[x, y] == false && count == 3)
+                    {
+                        scratchPad[x, y] = true;
+                    }
+
+                    // Dead cells without 3 living neighbors are still dead in the next generation.
+                    if (universe[x, y] == false && count != 3)
+                    {
+                        scratchPad[x, y] = false;
+                    }
+
+                    // Update alive cell count
+                    if (scratchPad[x, y] == true && universe[x, y] == false)
+                    {
+                        AliveCells++;
+                    }
+                    else if (scratchPad[x, y] == false && universe[x, y] == true)
+                    {
+                        AliveCells--;
+                    }
+
+                }
 
                 // Swaps Scratchpad and Universe
                 bool[,] temp = universe;
@@ -262,8 +273,9 @@ namespace Denomme_Adam_GameOfLife
 
                 // Update status strip generations
                 toolStripStatusLabelGenerations.Text = "Generations = " + generations.ToString();
-                toolStripStatusAlive.Text = "Alive: " + isAlive.ToString();
 
+                // Update status strip alive
+                toolStripStatusAlive.Text = "Alive: " + AliveCells.ToString();
         }
 
         // The event called by the timer every Interval milliseconds.
@@ -310,7 +322,7 @@ namespace Denomme_Adam_GameOfLife
                     e.Graphics.DrawRectangle(gridPen, cellRect.X, cellRect.Y, cellRect.Width, cellRect.Height);
 
                     // Displays neighbor count in cell
-                    Font font = new Font("Arial", 12f);
+                    Font font = new Font("Arial", 7f);
 
                     StringFormat stringFormat = new StringFormat();
                     stringFormat.Alignment = StringAlignment.Center;
@@ -360,6 +372,18 @@ namespace Denomme_Adam_GameOfLife
 
                 // Toggle the cell's state
                 universe[x, y] = !universe[x, y];
+
+                // Update alive cell count
+                if (universe[x, y] == true)
+                {
+                    AliveCells++;
+                    toolStripStatusAlive.Text = "Alive: " + AliveCells.ToString();
+                }
+                if (universe[x, y] == false)
+                {
+                    AliveCells--;
+                    toolStripStatusAlive.Text = "Alive: " + AliveCells.ToString();
+                }
 
                 // Tell Windows you need to repaint
                 graphicsPanel1.Invalidate();
@@ -411,8 +435,10 @@ namespace Denomme_Adam_GameOfLife
 
         private void newToolStripButton_Click(object sender, EventArgs e)
         {
+            AliveCells = 0;
             generations = 0;
             toolStripStatusLabelGenerations.Text = "Generations = " + generations.ToString();
+            toolStripStatusAlive.Text = "Alive: " + AliveCells.ToString();
 
             for (int y = 0; y < universe.GetLength(1); y++)
 
@@ -538,7 +564,7 @@ namespace Denomme_Adam_GameOfLife
                     // Increment the maxHeight variable for each row read.
                     else
                     {
-                        maxHeight++;                      
+                        maxHeight++;
                     }
                     // Get the length of the current row string
                     // and adjust the maxWidth variable if necessary.
@@ -548,7 +574,7 @@ namespace Denomme_Adam_GameOfLife
                 // Resize the current universe and scratchPad
                 // to the width and height of the file calculated above.
                 universe = new bool[maxWidth, maxHeight];
-                scratchPad = new bool[maxWidth, maxHeight]; 
+                scratchPad = new bool[maxWidth, maxHeight];
 
                 // Reset the file pointer back to the beginning of the file.
                 reader.BaseStream.Seek(0, SeekOrigin.Begin);
@@ -590,6 +616,20 @@ namespace Denomme_Adam_GameOfLife
                 }
                 // Close the file.
                 reader.Close();
+
+                // Update alive cell count
+                AliveCells = 0;
+
+                for (int y = 0; y < universe.GetLength(1); y++)
+
+                    for (int x = 0; x < universe.GetLength(0); x++)
+                    {
+                        if (universe[x, y] == true)
+                        {
+                            AliveCells++;
+                        }
+                    }
+                toolStripStatusAlive.Text = "Alive: " + AliveCells.ToString();
             }
         }
 
@@ -600,6 +640,7 @@ namespace Denomme_Adam_GameOfLife
 
         private void fromTimeToolStripMenuItem1_Click(object sender, EventArgs e)
         {
+            AliveCells = 0;
             RandomizeTime();
         }
 
@@ -607,5 +648,6 @@ namespace Denomme_Adam_GameOfLife
         {
 
         }
+
     }
 }
