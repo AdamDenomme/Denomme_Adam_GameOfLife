@@ -15,11 +15,12 @@ namespace Denomme_Adam_GameOfLife
     public partial class Main : Form
     {
 
-        bool CountNeighborisFinite = true;
-
-        // Int to show neighbor count
+        // Count Neighbor
         int CountNeighbor = 0;
 
+        bool CountNeighborisFinite = true;
+
+        // User inputted seed
         int userSeed = 0;
 
         // The universe array
@@ -44,20 +45,27 @@ namespace Denomme_Adam_GameOfLife
         // View Menu items
         bool isNeighborCountVisible;
 
-        bool isGridVisible;
+        bool isGridVisible = true;
 
         bool isHUDVisible;
 
         public Main()
         {
             InitializeComponent();
+            
+            // Initializes Settings
+            universe = new bool [Properties.Settings.Default.uWidth, Properties.Settings.Default.uHeight];
+            scratchPad = new bool[Properties.Settings.Default.uWidth, Properties.Settings.Default.uHeight];
+            timer.Interval = Properties.Settings.Default.Interval;
+            graphicsPanel1.BackColor = Properties.Settings.Default.BackColor;
+            gridColor = Properties.Settings.Default.GridColor;
+            cellColor = Properties.Settings.Default.CellColor;
 
-            // Setup the timer
-            timer.Interval = 100; // milliseconds
             timer.Tick += Timer_Tick;
             timer.Enabled = false; // start timer running
         }
 
+        // Function for randomizing based off of time
         private void RandomizeTime()
         {
 
@@ -87,6 +95,7 @@ namespace Denomme_Adam_GameOfLife
             graphicsPanel1.Invalidate();
         }
 
+        // Function for randomizing based off of seed
         private void RandomizeSeed()
         {
             Random randSeed = new Random(userSeed);
@@ -330,7 +339,7 @@ namespace Denomme_Adam_GameOfLife
                         e.Graphics.DrawRectangle(gridPen, cellRect.X, cellRect.Y, cellRect.Width, cellRect.Height);
                     }
 
-                    // Displays neighbor count in cell
+                    // Displays neighbor count in cell (if visible)
 
                     if (isNeighborCountVisible)
                     {
@@ -341,6 +350,7 @@ namespace Denomme_Adam_GameOfLife
                         stringFormat.LineAlignment = StringAlignment.Center;
 
                         Rectangle rect = cellRect;
+
                         if (CountNeighborisFinite == true)
                         {
                             CountNeighbor = CountNeighborsFinite(x, y);
@@ -350,7 +360,7 @@ namespace Denomme_Adam_GameOfLife
                             CountNeighbor = CountNeighborsToroidal(x, y);
                         }
 
-                        if (CountNeighbor == 0)
+                        if (CountNeighbor == 0) // Wanted to steal the demo formatting where if it had no neighbors, it would not display a number
                         {
 
                         }
@@ -362,6 +372,7 @@ namespace Denomme_Adam_GameOfLife
                 }
             }
 
+            // Displays HUD if visible
             if (isHUDVisible)
             {
                 Brush HUDBrush = new SolidBrush(Color.FromArgb(255, Color.BlueViolet));
@@ -425,11 +436,16 @@ namespace Denomme_Adam_GameOfLife
             }
         }
 
+        // FILE MENU
+        /***********************************************************************/
+
+        // Exit
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
+        // New
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             generations = 0;
@@ -452,81 +468,7 @@ namespace Denomme_Adam_GameOfLife
             graphicsPanel1.Invalidate();
         }
 
-        private void pauseToolStripButton_Click(object sender, EventArgs e)
-        {
-            timer.Enabled = false;
-        }
-
-        private void startToolStripButton_Click(object sender, EventArgs e)
-        {
-            timer.Enabled = true;
-        }
-
-        private void nextgenToolStripButton_Click(object sender, EventArgs e)
-        {
-            NextGeneration();
-            graphicsPanel1.Invalidate();
-        }
-
-        private void newToolStripButton_Click(object sender, EventArgs e)
-        {
-            AliveCells = 0;
-            generations = 0;
-            toolStripStatusLabelGenerations.Text = "Generations = " + generations.ToString();
-            toolStripStatusAlive.Text = "Alive: " + AliveCells.ToString();
-
-            for (int y = 0; y < universe.GetLength(1); y++)
-
-                for (int x = 0; x < universe.GetLength(0); x++)
-                {
-                    universe[x, y] = false;
-                }
-            graphicsPanel1.Invalidate();
-
-            for (int y = 0; y < scratchPad.GetLength(1); y++)
-
-                for (int x = 0; x < scratchPad.GetLength(0); x++)
-                {
-                    scratchPad[x, y] = false;
-                }
-            graphicsPanel1.Invalidate();
-        }
-
-        // Count neighbor visibility
-        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (optionsToolStripMenuItem.Checked == false)
-            {
-                neighborCountToolStripMenuItem.Checked = true;
-                optionsToolStripMenuItem.Checked = true;
-                isNeighborCountVisible = true;
-                graphicsPanel1.Invalidate();
-            }
-            else if (optionsToolStripMenuItem.Checked == true)
-            {
-                neighborCountToolStripMenuItem.Checked = false;
-                optionsToolStripMenuItem.Checked = false;
-                isNeighborCountVisible = false;
-                graphicsPanel1.Invalidate();
-            }
-        }
-
-        private void torodialToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            CountNeighborisFinite = false;
-            finiteToolStripMenuItem.Checked = false;
-            torodialToolStripMenuItem.Checked = true;
-            graphicsPanel1.Invalidate();
-        }
-
-        private void finiteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            CountNeighborisFinite = true;
-            torodialToolStripMenuItem.Checked = false;
-            finiteToolStripMenuItem.Checked = true;
-            graphicsPanel1.Invalidate();
-        }    
-
+        // Open
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int yPos = 0;
@@ -629,233 +571,7 @@ namespace Denomme_Adam_GameOfLife
             }
         }
 
-        private void fromSeedToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SeedDialog dlg = new SeedDialog();
-            dlg.Seed = userSeed;
-
-            if (DialogResult.OK == dlg.ShowDialog())
-            {
-                userSeed = dlg.Seed;
-                RandomizeSeed();
-                graphicsPanel1.Invalidate();
-            }
-        }
-
-        private void fromTimeToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            AliveCells = 0;
-            RandomizeTime();
-        }
-
-        // Grid 
-        private void toolStripMenuItem2_Click(object sender, EventArgs e)
-        {
-            if (toolStripMenuItem2.Checked == false)
-            {
-                gridToolStripMenuItem.Checked = true;
-                toolStripMenuItem2.Checked = true;
-                isGridVisible = true;
-                graphicsPanel1.Invalidate();
-            }
-            else if (toolStripMenuItem2.Checked == true)
-            {
-                gridToolStripMenuItem.Checked = false;
-                toolStripMenuItem2.Checked = false;
-                isGridVisible = false;
-                graphicsPanel1.Invalidate();
-            }
-        }
-
-        // CONTEXT SENSITIVE MENU
-        /***********************************************************************/
-
-        // Back color
-        private void backColorToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            ColorDialog dlg = new ColorDialog();
-            dlg.Color = BackColor;
-            if (DialogResult.OK == dlg.ShowDialog())
-            {
-                graphicsPanel1.BackColor = dlg.Color;
-                graphicsPanel1.Invalidate();
-            }
-        }
-
-        // Cell color
-        private void cellColorToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            ColorDialog dlg = new ColorDialog();
-            dlg.Color = cellColor;
-            if (DialogResult.OK == dlg.ShowDialog())
-            {
-                cellColor = dlg.Color;
-                graphicsPanel1.Invalidate();
-            }
-        }
-
-        // Grid color
-        private void gridColorToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            ColorDialog dlg = new ColorDialog();
-            dlg.Color = gridColor;
-            if (DialogResult.OK == dlg.ShowDialog())
-            {
-                gridColor = dlg.Color;
-                graphicsPanel1.Invalidate();
-            }
-        }
-
-        // HUD menu 
-        private void HUDcontextToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (HUDcontextToolStripMenuItem.Checked == false)
-            {
-                HUDToolStripMenuItem.Checked = true;
-                HUDcontextToolStripMenuItem.Checked = true;
-                isHUDVisible = true;
-                graphicsPanel1.Invalidate();
-            }
-            else if (HUDcontextToolStripMenuItem.Checked == true)
-            {
-                HUDToolStripMenuItem.Checked = false;
-                HUDcontextToolStripMenuItem.Checked = false;
-                isHUDVisible = false;
-                graphicsPanel1.Invalidate();
-            }
-        }
-
-        // Neighbor count
-        private void neighborCountToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (neighborCountToolStripMenuItem.Checked == false)
-            {
-                optionsToolStripMenuItem.Checked = true;
-                neighborCountToolStripMenuItem.Checked = true;
-                isNeighborCountVisible = true;
-                graphicsPanel1.Invalidate();
-            }
-            else if (neighborCountToolStripMenuItem.Checked == true)
-            {
-                optionsToolStripMenuItem.Checked = false;
-                neighborCountToolStripMenuItem.Checked = false;
-                isNeighborCountVisible = false;
-                graphicsPanel1.Invalidate();
-            }
-
-        }
-
-        // Grid
-        private void gridToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (gridToolStripMenuItem.Checked == false)
-            {
-                toolStripMenuItem2.Checked = true;
-                gridToolStripMenuItem.Checked = true;
-                isGridVisible = true;
-                graphicsPanel1.Invalidate();
-            }
-            else if (gridToolStripMenuItem.Checked == true)
-            {
-                gridToolStripMenuItem.Checked = false;
-                toolStripMenuItem2.Checked = false;
-                isGridVisible = false;
-                graphicsPanel1.Invalidate();
-            }
-        }
-
-        /***********************************************************************/
-
-        // SETTINGS MENU
-        /***********************************************************************/
-
-        // Back color
-        private void backColorToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ColorDialog dlg = new ColorDialog();
-            dlg.Color = BackColor;
-            if(DialogResult.OK == dlg.ShowDialog())
-            {
-                graphicsPanel1.BackColor = dlg.Color;
-                graphicsPanel1.Invalidate();
-            }
-        }
-
-        // Cell color
-        private void cellColorToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ColorDialog dlg = new ColorDialog();
-            dlg.Color = cellColor;
-            if (DialogResult.OK == dlg.ShowDialog())
-            {
-                cellColor = dlg.Color;
-                graphicsPanel1.Invalidate();
-            }
-
-        }
-
-        // Grid color
-        private void gridColorToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ColorDialog dlg = new ColorDialog();
-            dlg.Color = gridColor;
-            if (DialogResult.OK == dlg.ShowDialog())
-            {
-                gridColor = dlg.Color;
-                graphicsPanel1.Invalidate();
-            }
-        }
-
-        // Options menu
-        private void optionsToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            int numWidth = universe.GetLength(0);
-            int numHeight = universe.GetLength(1);
-
-            OptionsDialog dlg = new OptionsDialog();
-
-            dlg.Interval = timer.Interval;
-            dlg.uWidth = universe.GetLength(0);
-            dlg.uHeight = universe.GetLength(1);
-
-            if (DialogResult.OK == dlg.ShowDialog())
-            {
-                timer.Interval = dlg.Interval;
-
-                if (numWidth != dlg.uWidth || numHeight != dlg.uHeight)
-                {
-                    AliveCells = 0;
-                    numWidth = dlg.uWidth;
-                    numHeight = dlg.uHeight;
-
-                    universe = new bool[numWidth, numHeight];
-                    scratchPad = new bool[numWidth, numHeight];
-
-                    toolStripStatusAlive.Text = "Alive: " + AliveCells.ToString();
-
-                    graphicsPanel1.Invalidate();
-                }
-            }
-        }
-
-        private void HUDToolStripMenuItem_Click_1(object sender, EventArgs e)
-        {
-            if (HUDToolStripMenuItem.Checked == false)
-            {
-                HUDcontextToolStripMenuItem.Checked = true;
-                HUDToolStripMenuItem.Checked = true;
-                isHUDVisible = true;
-                graphicsPanel1.Invalidate();
-            }
-            else if (HUDToolStripMenuItem.Checked == true)
-            {
-                HUDcontextToolStripMenuItem.Checked = false;
-                HUDToolStripMenuItem.Checked = false;
-                isHUDVisible = false;
-                graphicsPanel1.Invalidate();
-            }
-        }
-
+        // Save
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog dlg = new SaveFileDialog();
@@ -906,7 +622,56 @@ namespace Denomme_Adam_GameOfLife
             }
 
         }
+        /***********************************************************************/
 
+        // Displayed tool strip options
+        /***********************************************************************/
+
+        // Pause simulation
+        private void pauseToolStripButton_Click(object sender, EventArgs e)
+        {
+            timer.Enabled = false;
+        }
+
+        // Start simulation
+        private void startToolStripButton_Click(object sender, EventArgs e)
+        {
+            timer.Enabled = true;
+        }
+
+        // Next generation
+        private void nextgenToolStripButton_Click(object sender, EventArgs e)
+        {
+            NextGeneration();
+            graphicsPanel1.Invalidate();
+        }
+
+        // New
+        private void newToolStripButton_Click(object sender, EventArgs e)
+        {
+            AliveCells = 0;
+            generations = 0;
+            toolStripStatusLabelGenerations.Text = "Generations = " + generations.ToString();
+            toolStripStatusAlive.Text = "Alive: " + AliveCells.ToString();
+
+            for (int y = 0; y < universe.GetLength(1); y++)
+
+                for (int x = 0; x < universe.GetLength(0); x++)
+                {
+                    universe[x, y] = false;
+                }
+            graphicsPanel1.Invalidate();
+
+            for (int y = 0; y < scratchPad.GetLength(1); y++)
+
+                for (int x = 0; x < scratchPad.GetLength(0); x++)
+                {
+                    scratchPad[x, y] = false;
+                }
+            graphicsPanel1.Invalidate();
+        }
+
+        // Open
         private void openToolStripButton_Click(object sender, EventArgs e)
         {
             int yPos = 0;
@@ -1009,6 +774,7 @@ namespace Denomme_Adam_GameOfLife
             }
         }
 
+        // Save
         private void saveToolStripButton_Click(object sender, EventArgs e)
         {
             SaveFileDialog dlg = new SaveFileDialog();
@@ -1059,7 +825,332 @@ namespace Denomme_Adam_GameOfLife
             }
 
         }
+        /***********************************************************************/
 
+        // VIEW MENU
+        /***********************************************************************/
+
+        // Count neighbor visibility
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (optionsToolStripMenuItem.Checked == false)
+            {
+                neighborCountToolStripMenuItem.Checked = true;
+                optionsToolStripMenuItem.Checked = true;
+                isNeighborCountVisible = true;
+                graphicsPanel1.Invalidate();
+            }
+            else if (optionsToolStripMenuItem.Checked == true)
+            {
+                neighborCountToolStripMenuItem.Checked = false;
+                optionsToolStripMenuItem.Checked = false;
+                isNeighborCountVisible = false;
+                graphicsPanel1.Invalidate();
+            }
+        }
+
+        // Change to toroidal count
+        private void torodialToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CountNeighborisFinite = false;
+            finiteToolStripMenuItem.Checked = false;
+            torodialToolStripMenuItem.Checked = true;
+            graphicsPanel1.Invalidate();
+        }
+
+        // Change to finite count
+        private void finiteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CountNeighborisFinite = true;
+            torodialToolStripMenuItem.Checked = false;
+            finiteToolStripMenuItem.Checked = true;
+            graphicsPanel1.Invalidate();
+        }    
+
+        // Grid visibility
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            if (toolStripMenuItem2.Checked == false)
+            {
+                gridToolStripMenuItem.Checked = true;
+                toolStripMenuItem2.Checked = true;
+                isGridVisible = true;
+                graphicsPanel1.Invalidate();
+            }
+            else if (toolStripMenuItem2.Checked == true)
+            {
+                gridToolStripMenuItem.Checked = false;
+                toolStripMenuItem2.Checked = false;
+                isGridVisible = false;
+                graphicsPanel1.Invalidate();
+            }
+        }
+
+        // HUD visibility
+        private void HUDToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            if (HUDToolStripMenuItem.Checked == false)
+            {
+                HUDcontextToolStripMenuItem.Checked = true;
+                HUDToolStripMenuItem.Checked = true;
+                isHUDVisible = true;
+                graphicsPanel1.Invalidate();
+            }
+            else if (HUDToolStripMenuItem.Checked == true)
+            {
+                HUDcontextToolStripMenuItem.Checked = false;
+                HUDToolStripMenuItem.Checked = false;
+                isHUDVisible = false;
+                graphicsPanel1.Invalidate();
+            }
+        }
+        /***********************************************************************/
+
+        // RANDOMIZE MENU
+        /***********************************************************************/
+
+        // Randomize by seed
+        private void fromSeedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SeedDialog dlg = new SeedDialog();
+            dlg.Seed = userSeed;
+
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                userSeed = dlg.Seed;
+                RandomizeSeed();
+                graphicsPanel1.Invalidate();
+            }
+        }
+
+        // Randomize by time
+        private void fromTimeToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            AliveCells = 0;
+            RandomizeTime();
+        }
+        /***********************************************************************/
+
+        // CONTEXT SENSITIVE MENU
+        /***********************************************************************/
+
+        // Back color
+        private void backColorToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ColorDialog dlg = new ColorDialog();
+            dlg.Color = BackColor;
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                graphicsPanel1.BackColor = dlg.Color;
+                graphicsPanel1.Invalidate();
+            }
+        }
+
+        // Cell color
+        private void cellColorToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ColorDialog dlg = new ColorDialog();
+            dlg.Color = cellColor;
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                cellColor = dlg.Color;
+                graphicsPanel1.Invalidate();
+            }
+        }
+
+        // Grid color
+        private void gridColorToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ColorDialog dlg = new ColorDialog();
+            dlg.Color = gridColor;
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                gridColor = dlg.Color;
+                graphicsPanel1.Invalidate();
+            }
+        }
+
+        // HUD menu 
+        private void HUDcontextToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (HUDcontextToolStripMenuItem.Checked == false)
+            {
+                HUDToolStripMenuItem.Checked = true;
+                HUDcontextToolStripMenuItem.Checked = true;
+                isHUDVisible = true;
+                graphicsPanel1.Invalidate();
+            }
+            else if (HUDcontextToolStripMenuItem.Checked == true)
+            {
+                HUDToolStripMenuItem.Checked = false;
+                HUDcontextToolStripMenuItem.Checked = false;
+                isHUDVisible = false;
+                graphicsPanel1.Invalidate();
+            }
+        }
+
+        // Neighbor count
+        private void neighborCountToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (neighborCountToolStripMenuItem.Checked == false)
+            {
+                optionsToolStripMenuItem.Checked = true;
+                neighborCountToolStripMenuItem.Checked = true;
+                isNeighborCountVisible = true;
+                graphicsPanel1.Invalidate();
+            }
+            else if (neighborCountToolStripMenuItem.Checked == true)
+            {
+                optionsToolStripMenuItem.Checked = false;
+                neighborCountToolStripMenuItem.Checked = false;
+                isNeighborCountVisible = false;
+                graphicsPanel1.Invalidate();
+            }
+
+        }
+
+        // Grid
+        private void gridToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (gridToolStripMenuItem.Checked == true)
+            {
+                toolStripMenuItem2.Checked = false;
+                gridToolStripMenuItem.Checked = false;
+                isGridVisible = false;
+                graphicsPanel1.Invalidate();
+            }
+            else if (gridToolStripMenuItem.Checked == false)
+            {
+                gridToolStripMenuItem.Checked = true;
+                toolStripMenuItem2.Checked = true;
+                isGridVisible = true;
+                graphicsPanel1.Invalidate();
+            }
+        }
+        /***********************************************************************/
+
+        // SETTINGS MENU
+        /***********************************************************************/
+
+        // Back color
+        private void backColorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ColorDialog dlg = new ColorDialog();
+            dlg.Color = BackColor;
+            if(DialogResult.OK == dlg.ShowDialog())
+            {
+                graphicsPanel1.BackColor = dlg.Color;
+                graphicsPanel1.Invalidate();
+            }
+        }
+
+        // Cell color
+        private void cellColorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ColorDialog dlg = new ColorDialog();
+            dlg.Color = cellColor;
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                cellColor = dlg.Color;
+                graphicsPanel1.Invalidate();
+            }
+
+        }
+
+        // Grid color
+        private void gridColorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ColorDialog dlg = new ColorDialog();
+            dlg.Color = gridColor;
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                gridColor = dlg.Color;
+                graphicsPanel1.Invalidate();
+            }
+        }
+
+        // Options menu
+        private void optionsToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            int numWidth = universe.GetLength(0);
+            int numHeight = universe.GetLength(1);
+
+            OptionsDialog dlg = new OptionsDialog();
+
+            dlg.Interval = timer.Interval;
+            dlg.uWidth = universe.GetLength(0);
+            dlg.uHeight = universe.GetLength(1);
+
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                timer.Interval = dlg.Interval;
+
+                if (numWidth != dlg.uWidth || numHeight != dlg.uHeight)
+                {
+                    AliveCells = 0;
+                    numWidth = dlg.uWidth;
+                    numHeight = dlg.uHeight;
+
+                    universe = new bool[numWidth, numHeight];
+                    scratchPad = new bool[numWidth, numHeight];
+
+                    toolStripStatusAlive.Text = "Alive: " + AliveCells.ToString();
+
+                    graphicsPanel1.Invalidate();
+                }
+            }
+        }
+
+        /***********************************************************************/
+
+        // Settings methood for when program closes
+        private void Main_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Properties.Settings.Default.uWidth = universe.GetLength(0);
+            Properties.Settings.Default.uHeight = universe.GetLength(1);
+            Properties.Settings.Default.Interval = timer.Interval;
+            Properties.Settings.Default.BackColor = graphicsPanel1.BackColor;
+            Properties.Settings.Default.GridColor = gridColor;
+            Properties.Settings.Default.CellColor = cellColor;
+
+            Properties.Settings.Default.Save();
+        }
+
+        // Reset settings 
+        private void resetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Reset();
+
+            universe = new bool[Properties.Settings.Default.uWidth, Properties.Settings.Default.uHeight];
+            scratchPad = new bool[Properties.Settings.Default.uWidth, Properties.Settings.Default.uHeight];
+            timer.Interval = Properties.Settings.Default.Interval;
+            graphicsPanel1.BackColor = Properties.Settings.Default.BackColor;
+            gridColor = Properties.Settings.Default.GridColor;
+            cellColor = Properties.Settings.Default.CellColor;
+
+            AliveCells = 0;
+            toolStripStatusAlive.Text = "Alive: " + AliveCells.ToString();
+            graphicsPanel1.Invalidate();
+
+        }
+
+        // Reload settings
+        private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Reload();
+
+            universe = new bool[Properties.Settings.Default.uWidth, Properties.Settings.Default.uHeight];
+            scratchPad = new bool[Properties.Settings.Default.uWidth, Properties.Settings.Default.uHeight];
+            timer.Interval = Properties.Settings.Default.Interval;
+            graphicsPanel1.BackColor = Properties.Settings.Default.BackColor;
+            gridColor = Properties.Settings.Default.GridColor;
+            cellColor = Properties.Settings.Default.CellColor;
+
+            AliveCells = 0;
+            toolStripStatusAlive.Text = "Alive: " + AliveCells.ToString();
+            graphicsPanel1.Invalidate();
+
+        }
         /***********************************************************************/
     }
 }

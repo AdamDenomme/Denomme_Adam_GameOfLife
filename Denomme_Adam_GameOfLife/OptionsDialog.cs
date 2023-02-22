@@ -17,6 +17,7 @@ namespace Denomme_Adam_GameOfLife
             InitializeComponent();
         }
 
+        // Get sets for interval, universe width, universe height
         public int Interval
         {
             get { return (int)numericUpDownInterval.Value; }

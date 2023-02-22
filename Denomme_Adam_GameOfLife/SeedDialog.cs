@@ -23,6 +23,7 @@ namespace Denomme_Adam_GameOfLife
             Random rnd = new Random();
             numericUpDownSeed.Value = rnd.Next();
         }
+        // Get set for the userSeed
         public int Seed
         {
             get { return (int)numericUpDownSeed.Value; }
