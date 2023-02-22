@@ -474,6 +474,7 @@ namespace Denomme_Adam_GameOfLife
             CountNeighborisFinite = false;
             finiteToolStripMenuItem.Checked = false;
             torodialToolStripMenuItem.Checked = true;
+            graphicsPanel1.Invalidate();
         }
 
         private void finiteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -481,6 +482,7 @@ namespace Denomme_Adam_GameOfLife
             CountNeighborisFinite = true;
             torodialToolStripMenuItem.Checked = false;
             finiteToolStripMenuItem.Checked = true;
+            graphicsPanel1.Invalidate();
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
