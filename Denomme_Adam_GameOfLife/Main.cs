@@ -11,13 +11,15 @@ using System.Windows.Forms;
 
 namespace Denomme_Adam_GameOfLife
 {
-    public partial class Form1 : Form
+    public partial class Main : Form
     {
 
         bool CountNeighborisFinite = true;
 
         // Int to show neighbor count
         int CountNeighbor = 0;
+
+        int userSeed = 0;
 
         // The universe array
         bool[,] universe = new bool[30, 30];
@@ -43,7 +45,7 @@ namespace Denomme_Adam_GameOfLife
 
         bool isGridVisible;
 
-        public Form1()
+        public Main()
         {
             InitializeComponent();
 
@@ -86,8 +88,6 @@ namespace Denomme_Adam_GameOfLife
 
         private void RandomizeSeed()
         {
-            int userSeed = 0;
-
             Random randSeed = new Random(userSeed);
 
             for (int y = 0; y < universe.GetLength(1); y++)
@@ -661,7 +661,15 @@ namespace Denomme_Adam_GameOfLife
 
         private void fromSeedToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RandomizeSeed();
+            SeedDialog dlg = new SeedDialog();
+            dlg.Seed = userSeed;
+
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                userSeed = dlg.Seed;
+                RandomizeSeed();
+                graphicsPanel1.Invalidate();
+            }
         }
 
         private void fromTimeToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -773,6 +781,7 @@ namespace Denomme_Adam_GameOfLife
             }
         }
 
+        // Options menu
         private void optionsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             int numWidth = universe.GetLength(0);
@@ -798,6 +807,44 @@ namespace Denomme_Adam_GameOfLife
 
                     graphicsPanel1.Invalidate();
                 }
+            }
+        }
+
+        private void hUDToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void neighborCountToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (optionsToolStripMenuItem.Checked == false)
+            {
+                optionsToolStripMenuItem.Checked = true;
+                isNeighborCountVisible = true;
+                graphicsPanel1.Invalidate();
+            }
+            else if (optionsToolStripMenuItem.Checked == true)
+            {
+                optionsToolStripMenuItem.Checked = false;
+                isNeighborCountVisible = false;
+                graphicsPanel1.Invalidate();
+            }
+
+        }
+
+        private void gridToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (toolStripMenuItem2.Checked == false)
+            {
+                toolStripMenuItem2.Checked = true;
+                isGridVisible = true;
+                graphicsPanel1.Invalidate();
+            }
+            else if (toolStripMenuItem2.Checked == true)
+            {
+                toolStripMenuItem2.Checked = false;
+                isGridVisible = false;
+                graphicsPanel1.Invalidate();
             }
         }
 
