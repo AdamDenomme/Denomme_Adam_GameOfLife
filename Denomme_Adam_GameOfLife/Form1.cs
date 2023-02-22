@@ -41,7 +41,7 @@ namespace Denomme_Adam_GameOfLife
         // View Menu items
         bool isNeighborCountVisible;
 
-        bool isGridVisible = true;
+        bool isGridVisible;
 
         public Form1()
         {
@@ -324,7 +324,10 @@ namespace Denomme_Adam_GameOfLife
                     }
 
                     // Outline the cell with a pen
-                    e.Graphics.DrawRectangle(gridPen, cellRect.X, cellRect.Y, cellRect.Width, cellRect.Height);
+                    if (isGridVisible)
+                    {
+                        e.Graphics.DrawRectangle(gridPen, cellRect.X, cellRect.Y, cellRect.Width, cellRect.Height);
+                    }
 
                     // Displays neighbor count in cell
 
@@ -672,5 +675,20 @@ namespace Denomme_Adam_GameOfLife
 
         }
 
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            if (toolStripMenuItem2.Checked == false)
+            {
+                toolStripMenuItem2.Checked = true;
+                isGridVisible = true;
+                graphicsPanel1.Invalidate();
+            }
+            else if (toolStripMenuItem2.Checked == true)
+            {
+                toolStripMenuItem2.Checked = false;
+                isGridVisible = false;
+                graphicsPanel1.Invalidate();
+            }
+        }
     }
 }
