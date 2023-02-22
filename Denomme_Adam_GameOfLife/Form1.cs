@@ -22,9 +22,6 @@ namespace Denomme_Adam_GameOfLife
         // The universe array
         bool[,] universe = new bool[30, 30];
 
-        // The scratchpad array
-        bool[,] scratchPad = new bool[30, 30];
-
         // Drawing colors
         Color gridColor = Color.Black;
         Color cellColor = Color.Gray;
@@ -210,6 +207,8 @@ namespace Denomme_Adam_GameOfLife
         // Calculate the next generation of cells
         private void NextGeneration()
         {
+            // The scratchpad array
+            bool[,] scratchPad = new bool[universe.GetLength(0), universe.GetLength(1)];
 
             for (int y = 0; y < universe.GetLength(1); y++)
 
@@ -223,7 +222,7 @@ namespace Denomme_Adam_GameOfLife
                     {
                         CountNeighbor = CountNeighborsToroidal(x, y);
                     }
-                    
+
                     int count = CountNeighbor;
 
                     // Living cells with less than 2 living neighbors die in the next generation.
@@ -419,14 +418,6 @@ namespace Denomme_Adam_GameOfLife
                     universe[x, y] = false;
                 }
             graphicsPanel1.Invalidate();
-
-            for (int y = 0; y < scratchPad.GetLength(1); y++)
-
-                for (int x = 0; x < scratchPad.GetLength(0); x++)
-                {
-                    scratchPad[x, y] = false;
-                }
-            graphicsPanel1.Invalidate();
         }
 
         private void cutToolStripButton_Click(object sender, EventArgs e)
@@ -460,13 +451,6 @@ namespace Denomme_Adam_GameOfLife
                 }
             graphicsPanel1.Invalidate();
 
-            for (int y = 0; y < scratchPad.GetLength(1); y++)
-
-                for (int x = 0; x < scratchPad.GetLength(0); x++)
-                {
-                    scratchPad[x, y] = false;
-                }
-            graphicsPanel1.Invalidate();
         }
 
         private void customizeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -600,7 +584,6 @@ namespace Denomme_Adam_GameOfLife
                 // Resize the current universe and scratchPad
                 // to the width and height of the file calculated above.
                 universe = new bool[maxWidth, maxHeight];
-                scratchPad = new bool[maxWidth, maxHeight];
 
                 // Reset the file pointer back to the beginning of the file.
                 reader.BaseStream.Seek(0, SeekOrigin.Begin);
@@ -769,6 +752,29 @@ namespace Denomme_Adam_GameOfLife
             if (DialogResult.OK == dlg.ShowDialog())
             {
                 gridColor = dlg.Color;
+                graphicsPanel1.Invalidate();
+            }
+        }
+
+        private void optionsToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            int numWidth = universe.GetLength(0);
+            int numHeight = universe.GetLength(1);
+
+            OptionsDialog dlg = new OptionsDialog();
+
+            dlg.Interval = timer.Interval;
+            dlg.uWidth = universe.GetLength(0);
+            dlg.uHeight = universe.GetLength(1);
+
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                timer.Interval = dlg.Interval;
+                numWidth = dlg.uWidth;
+                numHeight = dlg.uHeight;
+
+                universe = new bool [numWidth, numHeight];
+
                 graphicsPanel1.Invalidate();
             }
         }
