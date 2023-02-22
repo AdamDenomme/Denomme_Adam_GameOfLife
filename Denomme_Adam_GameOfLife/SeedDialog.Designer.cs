@@ -81,6 +81,7 @@
             this.Randomize.TabIndex = 3;
             this.Randomize.Text = "Randomize";
             this.Randomize.UseVisualStyleBackColor = true;
+            this.Randomize.Click += new System.EventHandler(this.Randomize_Click);
             // 
             // labelSeed
             // 
@@ -93,8 +94,10 @@
             // 
             // SeedDialog
             // 
+            this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.Cancel;
             this.ClientSize = new System.Drawing.Size(260, 143);
             this.Controls.Add(this.labelSeed);
             this.Controls.Add(this.Randomize);

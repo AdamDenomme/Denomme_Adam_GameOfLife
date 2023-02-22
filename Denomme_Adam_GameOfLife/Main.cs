@@ -62,7 +62,6 @@ namespace Denomme_Adam_GameOfLife
         {
 
             Random randTime = new Random();
-            //Random randSeed = new Random(userSeed);
 
             for (int y = 0; y < universe.GetLength(1); y++)
 
@@ -365,7 +364,7 @@ namespace Denomme_Adam_GameOfLife
 
             if (isHUDVisible)
             {
-                Brush HUDBrush = new SolidBrush(Color.FromArgb(230, Color.BlueViolet));
+                Brush HUDBrush = new SolidBrush(Color.FromArgb(255, Color.BlueViolet));
 
                 Font font = new Font("Arial", 16f);
 
@@ -498,12 +497,14 @@ namespace Denomme_Adam_GameOfLife
         {
             if (optionsToolStripMenuItem.Checked == false)
             {
+                neighborCountToolStripMenuItem.Checked = true;
                 optionsToolStripMenuItem.Checked = true;
                 isNeighborCountVisible = true;
                 graphicsPanel1.Invalidate();
             }
             else if (optionsToolStripMenuItem.Checked == true)
             {
+                neighborCountToolStripMenuItem.Checked = false;
                 optionsToolStripMenuItem.Checked = false;
                 isNeighborCountVisible = false;
                 graphicsPanel1.Invalidate();
@@ -524,57 +525,7 @@ namespace Denomme_Adam_GameOfLife
             torodialToolStripMenuItem.Checked = false;
             finiteToolStripMenuItem.Checked = true;
             graphicsPanel1.Invalidate();
-        }
-
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFileDialog dlg = new SaveFileDialog();
-            dlg.Filter = "All Files|*.*|Cells|*.cells";
-            dlg.FilterIndex = 2; dlg.DefaultExt = "cells";
-
-
-            if (DialogResult.OK == dlg.ShowDialog())
-            {
-                StreamWriter writer = new StreamWriter(dlg.FileName);
-
-                // Write any comments you want to include first.
-                // Prefix all comment strings with an exclamation point.
-                // Use WriteLine to write the strings to the file. 
-                // It appends a CRLF for you.
-                writer.Write("!");
-                writer.WriteLine(dlg.FileName);
-
-                // Iterate through the universe one row at a time.
-                for (int y = 0; y < universe.GetLength(1); y++)
-                    {
-                    // Create a string to represent the current row.
-                    String currentRow = string.Empty;
-
-                    // Iterate through the current row one cell at a time.
-                    for (int x = 0; x < universe.GetLength(0); x++)
-                        {
-                        // If the universe[x,y] is alive then append 'O' (capital O)
-                        // to the row string.
-                        if (universe[x, y] == true)
-                        {
-                            currentRow += 'O';
-                        }
-                        // Else if the universe[x,y] is dead then append '.' (period)
-                        // to the row string.
-                        if (universe[x, y] == false)
-                        {
-                            currentRow += '.';
-                        }
-
-                    }
-                    // Once the current row has been read through and the 
-                    // string constructed then write it to the file using WriteLine.
-                    writer.WriteLine(currentRow);
-                }
-                // After all rows and columns have been written then close the file.
-                writer.Close();
-            }
-        }
+        }    
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -702,12 +653,14 @@ namespace Denomme_Adam_GameOfLife
         {
             if (toolStripMenuItem2.Checked == false)
             {
+                gridToolStripMenuItem.Checked = true;
                 toolStripMenuItem2.Checked = true;
                 isGridVisible = true;
                 graphicsPanel1.Invalidate();
             }
             else if (toolStripMenuItem2.Checked == true)
             {
+                gridToolStripMenuItem.Checked = false;
                 toolStripMenuItem2.Checked = false;
                 isGridVisible = false;
                 graphicsPanel1.Invalidate();
@@ -754,17 +707,19 @@ namespace Denomme_Adam_GameOfLife
         }
 
         // HUD menu 
-        private void hUDToolStripMenuItem_Click(object sender, EventArgs e)
+        private void HUDcontextToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (HUDToolStripMenuItem.Checked == false)
+            if (HUDcontextToolStripMenuItem.Checked == false)
             {
                 HUDToolStripMenuItem.Checked = true;
+                HUDcontextToolStripMenuItem.Checked = true;
                 isHUDVisible = true;
                 graphicsPanel1.Invalidate();
             }
-            else if (HUDToolStripMenuItem.Checked == true)
+            else if (HUDcontextToolStripMenuItem.Checked == true)
             {
                 HUDToolStripMenuItem.Checked = false;
+                HUDcontextToolStripMenuItem.Checked = false;
                 isHUDVisible = false;
                 graphicsPanel1.Invalidate();
             }
@@ -773,15 +728,17 @@ namespace Denomme_Adam_GameOfLife
         // Neighbor count
         private void neighborCountToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (optionsToolStripMenuItem.Checked == false)
+            if (neighborCountToolStripMenuItem.Checked == false)
             {
                 optionsToolStripMenuItem.Checked = true;
+                neighborCountToolStripMenuItem.Checked = true;
                 isNeighborCountVisible = true;
                 graphicsPanel1.Invalidate();
             }
-            else if (optionsToolStripMenuItem.Checked == true)
+            else if (neighborCountToolStripMenuItem.Checked == true)
             {
                 optionsToolStripMenuItem.Checked = false;
+                neighborCountToolStripMenuItem.Checked = false;
                 isNeighborCountVisible = false;
                 graphicsPanel1.Invalidate();
             }
@@ -791,14 +748,16 @@ namespace Denomme_Adam_GameOfLife
         // Grid
         private void gridToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (toolStripMenuItem2.Checked == false)
+            if (gridToolStripMenuItem.Checked == false)
             {
                 toolStripMenuItem2.Checked = true;
+                gridToolStripMenuItem.Checked = true;
                 isGridVisible = true;
                 graphicsPanel1.Invalidate();
             }
-            else if (toolStripMenuItem2.Checked == true)
+            else if (gridToolStripMenuItem.Checked == true)
             {
+                gridToolStripMenuItem.Checked = false;
                 toolStripMenuItem2.Checked = false;
                 isGridVisible = false;
                 graphicsPanel1.Invalidate();
@@ -883,16 +842,222 @@ namespace Denomme_Adam_GameOfLife
         {
             if (HUDToolStripMenuItem.Checked == false)
             {
+                HUDcontextToolStripMenuItem.Checked = true;
                 HUDToolStripMenuItem.Checked = true;
                 isHUDVisible = true;
                 graphicsPanel1.Invalidate();
             }
             else if (HUDToolStripMenuItem.Checked == true)
             {
+                HUDcontextToolStripMenuItem.Checked = false;
                 HUDToolStripMenuItem.Checked = false;
                 isHUDVisible = false;
                 graphicsPanel1.Invalidate();
             }
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Filter = "All Files|*.*|Cells|*.cells";
+            dlg.FilterIndex = 2; dlg.DefaultExt = "cells";
+
+
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                StreamWriter writer = new StreamWriter(dlg.FileName);
+
+                // Write any comments you want to include first.
+                // Prefix all comment strings with an exclamation point.
+                // Use WriteLine to write the strings to the file. 
+                // It appends a CRLF for you.
+                writer.Write("!");
+                writer.WriteLine(dlg.FileName);
+
+                // Iterate through the universe one row at a time.
+                for (int y = 0; y < universe.GetLength(1); y++)
+                {
+                    // Create a string to represent the current row.
+                    String currentRow = string.Empty;
+
+                    // Iterate through the current row one cell at a time.
+                    for (int x = 0; x < universe.GetLength(0); x++)
+                    {
+                        // If the universe[x,y] is alive then append 'O' (capital O)
+                        // to the row string.
+                        if (universe[x, y] == true)
+                        {
+                            currentRow += 'O';
+                        }
+                        // Else if the universe[x,y] is dead then append '.' (period)
+                        // to the row string.
+                        if (universe[x, y] == false)
+                        {
+                            currentRow += '.';
+                        }
+
+                    }
+                    // Once the current row has been read through and the 
+                    // string constructed then write it to the file using WriteLine.
+                    writer.WriteLine(currentRow);
+                }
+                // After all rows and columns have been written then close the file.
+                writer.Close();
+            }
+
+        }
+
+        private void openToolStripButton_Click(object sender, EventArgs e)
+        {
+            int yPos = 0;
+
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = "All Files|*.*|Cells|*.cells";
+            dlg.FilterIndex = 2;
+
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                StreamReader reader = new StreamReader(dlg.FileName);
+
+                // Create a couple variables to calculate the width and height
+                // of the data in the file.
+                int maxWidth = 0;
+                int maxHeight = 0;
+
+                // Iterate through the file once to get its size.
+                while (!reader.EndOfStream)
+                {
+                    // Read one row at a time.
+                    string row = reader.ReadLine();
+
+                    // If the row begins with '!' then it is a comment
+                    // and should be ignored.
+                    if (row.StartsWith("!"))
+                    {
+                        continue;
+                    }
+                    // If the row is not a comment then it is a row of cells.
+                    // Increment the maxHeight variable for each row read.
+                    else
+                    {
+                        maxHeight++;
+                    }
+                    // Get the length of the current row string
+                    // and adjust the maxWidth variable if necessary.
+                    maxWidth = row.Length;
+                }
+
+                // Resize the current universe and scratchPad
+                // to the width and height of the file calculated above.
+                universe = new bool[maxWidth, maxHeight];
+                scratchPad = new bool[maxWidth, maxHeight];
+
+                // Reset the file pointer back to the beginning of the file.
+                reader.BaseStream.Seek(0, SeekOrigin.Begin);
+
+                // Iterate through the file again, this time reading in the cells.
+                while (!reader.EndOfStream)
+                {
+                    // Read one row at a time.
+                    string row = reader.ReadLine();
+
+                    // If the row begins with '!' then
+                    // it is a comment and should be ignored.
+                    if (row.StartsWith("!"))
+                    {
+                        continue;
+                    }
+                    // If the row is not a comment then 
+                    // it is a row of cells and needs to be iterated through.
+                    else
+                    {
+                        for (int xPos = 0; xPos < row.Length; xPos++)
+                        {
+                            // If row[xPos] is a 'O' (capital O) then
+                            // set the corresponding cell in the universe to alive.
+                            if (row[xPos] == 'O')
+                            {
+                                universe[xPos, yPos] = true;
+                            }
+                            // If row[xPos] is a '.' (period) then
+                            // set the corresponding cell in the universe to dead.
+                            if (row[xPos] == '.')
+                            {
+                                universe[xPos, yPos] = false;
+                            }
+                        }
+                    }
+                    yPos++;
+                    graphicsPanel1.Invalidate();
+                }
+                // Close the file.
+                reader.Close();
+
+                // Update alive cell count
+                AliveCells = 0;
+
+                for (int y = 0; y < universe.GetLength(1); y++)
+
+                    for (int x = 0; x < universe.GetLength(0); x++)
+                    {
+                        if (universe[x, y] == true)
+                        {
+                            AliveCells++;
+                        }
+                    }
+                toolStripStatusAlive.Text = "Alive: " + AliveCells.ToString();
+            }
+        }
+
+        private void saveToolStripButton_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Filter = "All Files|*.*|Cells|*.cells";
+            dlg.FilterIndex = 2; dlg.DefaultExt = "cells";
+
+
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                StreamWriter writer = new StreamWriter(dlg.FileName);
+
+                // Write any comments you want to include first.
+                // Prefix all comment strings with an exclamation point.
+                // Use WriteLine to write the strings to the file. 
+                // It appends a CRLF for you.
+                writer.Write("!");
+                writer.WriteLine("Cells");
+
+                // Iterate through the universe one row at a time.
+                for (int y = 0; y < universe.GetLength(1); y++)
+                {
+                    // Create a string to represent the current row.
+                    String currentRow = string.Empty;
+
+                    // Iterate through the current row one cell at a time.
+                    for (int x = 0; x < universe.GetLength(0); x++)
+                    {
+                        // If the universe[x,y] is alive then append 'O' (capital O)
+                        // to the row string.
+                        if (universe[x, y] == true)
+                        {
+                            currentRow += 'O';
+                        }
+                        // Else if the universe[x,y] is dead then append '.' (period)
+                        // to the row string.
+                        if (universe[x, y] == false)
+                        {
+                            currentRow += '.';
+                        }
+
+                    }
+                    // Once the current row has been read through and the 
+                    // string constructed then write it to the file using WriteLine.
+                    writer.WriteLine(currentRow);
+                }
+                // After all rows and columns have been written then close the file.
+                writer.Close();
+            }
+
         }
 
         /***********************************************************************/

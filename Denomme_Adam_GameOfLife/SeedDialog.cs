@@ -15,11 +15,19 @@ namespace Denomme_Adam_GameOfLife
         public SeedDialog()
         {
             InitializeComponent();
-        }    
+        }
+
+        // Randomizes Seed in UpDown
+        private void Randomize_Click(object sender, EventArgs e)
+        {
+            Random rnd = new Random();
+            numericUpDownSeed.Value = rnd.Next();
+        }
         public int Seed
         {
             get { return (int)numericUpDownSeed.Value; }
             set { numericUpDownSeed.Value = value; }
         }
+
     }
 }

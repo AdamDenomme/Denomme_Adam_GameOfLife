@@ -64,6 +64,11 @@
             // numericUpDownInterval
             // 
             this.numericUpDownInterval.Location = new System.Drawing.Point(183, 23);
+            this.numericUpDownInterval.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.numericUpDownInterval.Name = "numericUpDownInterval";
             this.numericUpDownInterval.Size = new System.Drawing.Size(39, 20);
             this.numericUpDownInterval.TabIndex = 2;
@@ -128,6 +133,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "OptionsDialog";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Options Dialog";
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownInterval)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).EndInit();
