@@ -38,7 +38,10 @@ namespace Denomme_Adam_GameOfLife
         // Alive Cell count
         int AliveCells = 0;
 
-        //Working for backup comment
+        // View Menu items
+        bool isNeighborCountVisible;
+
+        bool isGridVisible = true;
 
         public Form1()
         {
@@ -324,29 +327,33 @@ namespace Denomme_Adam_GameOfLife
                     e.Graphics.DrawRectangle(gridPen, cellRect.X, cellRect.Y, cellRect.Width, cellRect.Height);
 
                     // Displays neighbor count in cell
-                    Font font = new Font("Arial", 7f);
 
-                    StringFormat stringFormat = new StringFormat();
-                    stringFormat.Alignment = StringAlignment.Center;
-                    stringFormat.LineAlignment = StringAlignment.Center;
+                    if (isNeighborCountVisible)
+                    {
+                        Font font = new Font("Arial", 7f);
 
-                    Rectangle rect = cellRect;
-                    if (CountNeighborisFinite == true)
-                    {
-                        CountNeighbor = CountNeighborsFinite(x, y);
-                    }
-                    else if (CountNeighborisFinite == false)
-                    {
-                        CountNeighbor = CountNeighborsToroidal(x, y);
-                    }
+                        StringFormat stringFormat = new StringFormat();
+                        stringFormat.Alignment = StringAlignment.Center;
+                        stringFormat.LineAlignment = StringAlignment.Center;
 
-                    if (CountNeighbor == 0)
-                    {
+                        Rectangle rect = cellRect;
+                        if (CountNeighborisFinite == true)
+                        {
+                            CountNeighbor = CountNeighborsFinite(x, y);
+                        }
+                        else if (CountNeighborisFinite == false)
+                        {
+                            CountNeighbor = CountNeighborsToroidal(x, y);
+                        }
 
-                    }
-                    else
-                    {
-                        e.Graphics.DrawString(CountNeighbor.ToString(), font, Brushes.Black, rect, stringFormat);
+                        if (CountNeighbor == 0)
+                        {
+
+                        }
+                        else
+                        {
+                            e.Graphics.DrawString(CountNeighbor.ToString(), font, Brushes.Black, rect, stringFormat);
+                        }
                     }
                 }
             }
@@ -464,9 +471,21 @@ namespace Denomme_Adam_GameOfLife
 
         }
 
+        // Count neighbor visibility
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           
+            if (optionsToolStripMenuItem.Checked == false)
+            {
+                optionsToolStripMenuItem.Checked = true;
+                isNeighborCountVisible = true;
+                graphicsPanel1.Invalidate();
+            }
+            else if (optionsToolStripMenuItem.Checked == true)
+            {
+                optionsToolStripMenuItem.Checked = false;
+                isNeighborCountVisible = false;
+                graphicsPanel1.Invalidate();
+            }
         }
 
         private void torodialToolStripMenuItem_Click(object sender, EventArgs e)
