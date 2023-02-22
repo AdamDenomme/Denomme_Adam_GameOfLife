@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,6 +46,8 @@ namespace Denomme_Adam_GameOfLife
 
         bool isGridVisible;
 
+        bool isHUDVisible;
+
         public Main()
         {
             InitializeComponent();
@@ -57,7 +60,6 @@ namespace Denomme_Adam_GameOfLife
 
         private void RandomizeTime()
         {
-            //int userSeed = 0;
 
             Random randTime = new Random();
             //Random randSeed = new Random(userSeed);
@@ -361,6 +363,28 @@ namespace Denomme_Adam_GameOfLife
                 }
             }
 
+            if (isHUDVisible)
+            {
+                Brush HUDBrush = new SolidBrush(Color.FromArgb(230, Color.BlueViolet));
+
+                Font font = new Font("Arial", 16f);
+
+                StringFormat stringFormat = new StringFormat();
+                stringFormat.Alignment = StringAlignment.Near;
+                stringFormat.LineAlignment = StringAlignment.Far;
+
+                Rectangle rect = graphicsPanel1.ClientRectangle;
+
+                if (CountNeighborisFinite == false)
+                {
+                    e.Graphics.DrawString("Generations: " + generations.ToString() + "\n" + "Cell Count: " + AliveCells.ToString() + "\n" + "Boundary Type: Toroidal" + "\n" + "Universe Size: " + "{" + universe.GetLength(0) + ", " + universe.GetLength(1) + "}", font, HUDBrush, rect, stringFormat);
+                }
+                else if (CountNeighborisFinite == true)
+                {
+                    e.Graphics.DrawString("Generations: " + generations.ToString() + "\n" + "Cell Count: " + AliveCells.ToString() + "\n" + "Boundary Type: Finite" + "\n" + "Universe Size: " + "{" + universe.GetLength(0) + ", " + universe.GetLength(1) + "}", font, HUDBrush, rect, stringFormat);
+                }
+            }
+
             // Cleaning up pens and brushes
             gridPen.Dispose();
             cellBrush.Dispose();
@@ -429,17 +453,17 @@ namespace Denomme_Adam_GameOfLife
             graphicsPanel1.Invalidate();
         }
 
-        private void cutToolStripButton_Click(object sender, EventArgs e)
+        private void pauseToolStripButton_Click(object sender, EventArgs e)
         {
             timer.Enabled = false;
         }
 
-        private void copyToolStripButton_Click(object sender, EventArgs e)
+        private void startToolStripButton_Click(object sender, EventArgs e)
         {
             timer.Enabled = true;
         }
 
-        private void pasteToolStripButton_Click(object sender, EventArgs e)
+        private void nextgenToolStripButton_Click(object sender, EventArgs e)
         {
             NextGeneration();
             graphicsPanel1.Invalidate();
@@ -467,11 +491,6 @@ namespace Denomme_Adam_GameOfLife
                     scratchPad[x, y] = false;
                 }
             graphicsPanel1.Invalidate();
-        }
-
-        private void customizeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
         }
 
         // Count neighbor visibility
@@ -678,12 +697,7 @@ namespace Denomme_Adam_GameOfLife
             RandomizeTime();
         }
 
-        private void toolStripStatusInterval_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        // Grid visibility
+        // Grid 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
             if (toolStripMenuItem2.Checked == false)
@@ -735,6 +749,58 @@ namespace Denomme_Adam_GameOfLife
             if (DialogResult.OK == dlg.ShowDialog())
             {
                 gridColor = dlg.Color;
+                graphicsPanel1.Invalidate();
+            }
+        }
+
+        // HUD menu 
+        private void hUDToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (HUDToolStripMenuItem.Checked == false)
+            {
+                HUDToolStripMenuItem.Checked = true;
+                isHUDVisible = true;
+                graphicsPanel1.Invalidate();
+            }
+            else if (HUDToolStripMenuItem.Checked == true)
+            {
+                HUDToolStripMenuItem.Checked = false;
+                isHUDVisible = false;
+                graphicsPanel1.Invalidate();
+            }
+        }
+
+        // Neighbor count
+        private void neighborCountToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (optionsToolStripMenuItem.Checked == false)
+            {
+                optionsToolStripMenuItem.Checked = true;
+                isNeighborCountVisible = true;
+                graphicsPanel1.Invalidate();
+            }
+            else if (optionsToolStripMenuItem.Checked == true)
+            {
+                optionsToolStripMenuItem.Checked = false;
+                isNeighborCountVisible = false;
+                graphicsPanel1.Invalidate();
+            }
+
+        }
+
+        // Grid
+        private void gridToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (toolStripMenuItem2.Checked == false)
+            {
+                toolStripMenuItem2.Checked = true;
+                isGridVisible = true;
+                graphicsPanel1.Invalidate();
+            }
+            else if (toolStripMenuItem2.Checked == true)
+            {
+                toolStripMenuItem2.Checked = false;
+                isGridVisible = false;
                 graphicsPanel1.Invalidate();
             }
         }
@@ -799,51 +865,32 @@ namespace Denomme_Adam_GameOfLife
 
                 if (numWidth != dlg.uWidth || numHeight != dlg.uHeight)
                 {
+                    AliveCells = 0;
                     numWidth = dlg.uWidth;
                     numHeight = dlg.uHeight;
 
                     universe = new bool[numWidth, numHeight];
                     scratchPad = new bool[numWidth, numHeight];
 
+                    toolStripStatusAlive.Text = "Alive: " + AliveCells.ToString();
+
                     graphicsPanel1.Invalidate();
                 }
             }
         }
 
-        private void hUDToolStripMenuItem_Click(object sender, EventArgs e)
+        private void HUDToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-
-        }
-
-        private void neighborCountToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (optionsToolStripMenuItem.Checked == false)
+            if (HUDToolStripMenuItem.Checked == false)
             {
-                optionsToolStripMenuItem.Checked = true;
-                isNeighborCountVisible = true;
+                HUDToolStripMenuItem.Checked = true;
+                isHUDVisible = true;
                 graphicsPanel1.Invalidate();
             }
-            else if (optionsToolStripMenuItem.Checked == true)
+            else if (HUDToolStripMenuItem.Checked == true)
             {
-                optionsToolStripMenuItem.Checked = false;
-                isNeighborCountVisible = false;
-                graphicsPanel1.Invalidate();
-            }
-
-        }
-
-        private void gridToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (toolStripMenuItem2.Checked == false)
-            {
-                toolStripMenuItem2.Checked = true;
-                isGridVisible = true;
-                graphicsPanel1.Invalidate();
-            }
-            else if (toolStripMenuItem2.Checked == true)
-            {
-                toolStripMenuItem2.Checked = false;
-                isGridVisible = false;
+                HUDToolStripMenuItem.Checked = false;
+                isHUDVisible = false;
                 graphicsPanel1.Invalidate();
             }
         }
