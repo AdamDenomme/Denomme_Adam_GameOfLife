@@ -466,7 +466,7 @@ namespace Denomme_Adam_GameOfLife
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //test
+           
         }
 
         private void torodialToolStripMenuItem_Click(object sender, EventArgs e)
