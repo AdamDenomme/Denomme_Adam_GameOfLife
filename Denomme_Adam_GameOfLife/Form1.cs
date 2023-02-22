@@ -787,13 +787,17 @@ namespace Denomme_Adam_GameOfLife
             if (DialogResult.OK == dlg.ShowDialog())
             {
                 timer.Interval = dlg.Interval;
-                numWidth = dlg.uWidth;
-                numHeight = dlg.uHeight;
 
-                universe = new bool [numWidth, numHeight];
-                scratchPad = new bool[numWidth, numHeight]; 
+                if (numWidth != dlg.uWidth || numHeight != dlg.uHeight)
+                {
+                    numWidth = dlg.uWidth;
+                    numHeight = dlg.uHeight;
 
-                graphicsPanel1.Invalidate();
+                    universe = new bool[numWidth, numHeight];
+                    scratchPad = new bool[numWidth, numHeight];
+
+                    graphicsPanel1.Invalidate();
+                }
             }
         }
 
